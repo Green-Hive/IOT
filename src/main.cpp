@@ -9,11 +9,11 @@
 #include <QMC5883LCompass.h>
 
 // WiFi credentials
-const char* ssid = "Pixel_1828";
-const char* password = "papillon";
+const char* ssid = "partagematte";
+const char* password = "lazu1801";
 
 // MQTT Broker details
-const char* mqtt_server = "192.168.1.100";
+const char* mqtt_server = "172.201.14.60";
 const char* mqtt_topic = "sensor/data";
 
 WiFiClient espClient;
@@ -54,7 +54,7 @@ void setup() {
     Serial.begin(115200);
     while (!Serial) delay(10); // Wait for serial port to connect
     connectToWiFi();
-    // connectToMQTT();
+    connectToMQTT();
 
     compass.init(); // Initialize compass without checking return status
     Serial.println("Compass initialized."); // Inform about initialization
@@ -73,10 +73,10 @@ void setup() {
 
 
 void loop() {
-    // if (!mqttClient.connected()) {
-    //     connectToMQTT();
-    // }
-    // mqttClient.loop();
+    if (!mqttClient.connected()) {
+         connectToMQTT();
+     }
+    mqttClient.loop();
   
     sensors_event_t event;
     bmp.getEvent(&event);
@@ -140,10 +140,10 @@ void sendData(float temperature, float tempDHT, float pressure, float humidity, 
     jsonDocument["magnetic_z"] = z;
     String requestBody;
     serializeJson(jsonDocument, requestBody);
-    // Uncomment and update for MQTT or other uses
-    // if (mqttClient.publish(mqtt_topic, requestBody.c_str())) {
-    //     Serial.println("Data sent to MQTT");
-    // } else {
-    //     Serial.println("Failed to send data to MQTT");
-    // }
+    //Uncomment and update for MQTT or other uses
+     if (mqttClient.publish(mqtt_topic, requestBody.c_str())) {
+         Serial.println("Data sent to MQTT");
+     } else {
+         Serial.println("Failed to send data to MQTT");
+    }
 }
