@@ -24,14 +24,14 @@ PubSubClient mqttClient(espClient);
 #define DHTPIN2 4     // GPIO pin connected to the DHT sensor at top part, upper right
 #define DHTPIN3 27    // GPIO pin connected to the DHT sensor outside
 #define DHTTYPE DHT22 // DHT sensor type
-DHT dht1(DHTPIN1, DHTTYPE); // Initialize bottom part, lower left DHT sensor
-DHT dht2(DHTPIN2, DHTTYPE); // Initialize top part, upper right DHT sensor
-DHT dht3(DHTPIN3, DHTTYPE); // Initialize outside DHT sensor
+DHT dhtBottomLeft(DHTPIN1, DHTTYPE);    // Initialize bottom part, lower left DHT sensor
+DHT dhtTopRight(DHTPIN2, DHTTYPE);      // Initialize top part, upper right DHT sensor
+DHT dhtOutside(DHTPIN3, DHTTYPE);       // Initialize outside DHT sensor
 Adafruit_BMP085_Unified bmp = Adafruit_BMP085_Unified(10085);
 HX711_ADC LoadCell(5, 17);
 QMC5883LCompass compass;
 
-void sendData(float avgInsideTemp, float tempDHT3, float pressure, float humidity1, float humidity2, float humidity3, float weight, float x, float y, float z);
+void sendData(float tempBottomLeft, float tempTopRight, float tempOutside, float pressure, float humidityBottomLeft, float humidityTopRight, float humidityOutside, float weight, float x, float y, float z);
 
 void connectToWiFi() {
     WiFi.begin(ssid, password);
@@ -71,9 +71,9 @@ void setup() {
         while (1);
     }
 
-    dht1.begin();
-    dht2.begin();
-    dht3.begin();
+    dhtBottomLeft.begin();
+    dhtTopRight.begin();
+    dhtOutside.begin();
     LoadCell.begin();
     LoadCell.start(2000); // tare time in ms
 }
@@ -83,10 +83,10 @@ void loop() {
         connectToMQTT();
     }
     mqttClient.loop();
-  
+
     sensors_event_t event;
     bmp.getEvent(&event);
-  
+
     float tempBMP = 0;
     if (event.pressure) {
         bmp.getTemperature(&tempBMP);
@@ -97,23 +97,12 @@ void loop() {
     float y = compass.getY();
     float z = compass.getZ();
 
-    float humidity1 = dht1.readHumidity();
-    float tempDHT1 = dht1.readTemperature();
-    float humidity2 = dht2.readHumidity();
-    float tempDHT2 = dht2.readTemperature();
-    float humidity3 = dht3.readHumidity();
-    float tempDHT3 = dht3.readTemperature();
-    
-    // Calculate average temperature of DHT1, DHT2, and BMP
-    float avgInsideTemp = (tempDHT1 + tempDHT2 + tempBMP) / 3.0;
-
-    Serial.print("Inside Average Temperature: ");
-    Serial.print(avgInsideTemp);
-    Serial.println(" *C");
-
-    Serial.print("Outside Temperature: ");
-    Serial.print(tempDHT3);
-    Serial.println(" *C");
+    float humidityBottomLeft = dhtBottomLeft.readHumidity();
+    float tempBottomLeft = dhtBottomLeft.readTemperature();
+    float humidityTopRight = dhtTopRight.readHumidity();
+    float tempTopRight = dhtTopRight.readTemperature();
+    float humidityOutside = dhtOutside.readHumidity();
+    float tempOutside = dhtOutside.readTemperature();
 
     float weight = 0;
     if (LoadCell.update()) {
@@ -123,27 +112,28 @@ void loop() {
         Serial.println(" g");
     }
 
-    sendData(avgInsideTemp, tempDHT3, event.pressure, humidity1, humidity2, humidity3, weight, x, y, z);
+    sendData(tempBottomLeft, tempTopRight, tempOutside, event.pressure, humidityBottomLeft, humidityTopRight, humidityOutside, weight, x, y, z);
     delay(2000); // Wait a few seconds between reads
 }
 
-void sendData(float avgInsideTemp, float tempDHT3, float pressure, float humidity1, float humidity2, float humidity3, float weight, float x, float y, float z) {
-    StaticJsonDocument<500> jsonDocument; // Increase size to accommodate additional data
-    jsonDocument["avgInsideTemp"] = avgInsideTemp;
-    jsonDocument["outsideTemp"] = tempDHT3;
+void sendData(float tempBottomLeft, float tempTopRight, float tempOutside, float pressure, float humidityBottomLeft, float humidityTopRight, float humidityOutside, float weight, float x, float y, float z) {
+    StaticJsonDocument<500> jsonDocument;
+    jsonDocument["tempBottomLeft"] = tempBottomLeft;
+    jsonDocument["tempTopRight"] = tempTopRight;
+    jsonDocument["tempOutside"] = tempOutside;
     jsonDocument["pressure"] = pressure;
-    jsonDocument["humidity1"] = humidity1;
-    jsonDocument["humidity2"] = humidity2;
-    jsonDocument["humidity3"] = humidity3;
+    jsonDocument["humidityBottomLeft"] = humidityBottomLeft;
+    jsonDocument["humidityTopRight"] = humidityTopRight;
+    jsonDocument["humidityOutside"] = humidityOutside;
     jsonDocument["weight"] = weight;
     jsonDocument["magnetic_x"] = x;
     jsonDocument["magnetic_y"] = y;
     jsonDocument["magnetic_z"] = z;
     String requestBody;
     serializeJson(jsonDocument, requestBody);
-     if (mqttClient.publish(mqtt_topic, requestBody.c_str())) {
-         Serial.println("Data sent to MQTT");
-     } else {
-         Serial.println("Failed to send data to MQTT");
+    if (mqttClient.publish(mqtt_topic, requestBody.c_str())) {
+        Serial.println("Data sent to MQTT");
+    } else {
+        Serial.println("Failed to send data to MQTT");
     }
 }
