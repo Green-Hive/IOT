@@ -9,8 +9,8 @@
 #include <QMC5883LCompass.h>
 
 // WiFi credentials
-const char* ssid = "partagematte";
-const char* password = "lazu1801";
+const char* ssid = "Pixel_1828";
+const char* password = "papillon";
 
 // MQTT Broker details
 const char* mqtt_server = "172.201.14.60";
@@ -20,13 +20,19 @@ WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
 // Initialize sensors
-#define DHTPIN 4     // GPIO pin connected to the DHT sensor
-#define DHTTYPE DHT22
-DHT dht(DHTPIN, DHTTYPE);
+#define DHTPIN1 2     // GPIO pin connected to the DHT sensor at bottom part, lower left
+#define DHTPIN2 4     // GPIO pin connected to the DHT sensor at top part, upper right
+#define DHTPIN3 27    // GPIO pin connected to the DHT sensor outside
+#define DHTTYPE DHT22 // DHT sensor type
+DHT dht1(DHTPIN1, DHTTYPE); // Initialize bottom part, lower left DHT sensor
+DHT dht2(DHTPIN2, DHTTYPE); // Initialize top part, upper right DHT sensor
+DHT dht3(DHTPIN3, DHTTYPE); // Initialize outside DHT sensor
 Adafruit_BMP085_Unified bmp = Adafruit_BMP085_Unified(10085);
 HX711_ADC LoadCell(5, 17);
 QMC5883LCompass compass;
-void sendData(float temperature, float tempDHT, float pressure, float humidity, float weight, float x, float y, float z);
+
+void sendData(float avgInsideTemp, float tempDHT3, float pressure, float humidity1, float humidity2, float humidity3, float weight, float x, float y, float z);
+
 void connectToWiFi() {
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
@@ -56,9 +62,8 @@ void setup() {
     connectToWiFi();
     connectToMQTT();
 
-    compass.init(); // Initialize compass without checking return status
-    Serial.println("Compass initialized."); // Inform about initialization
-    // mode = 0x01 (continuous mode), odr = 0x04 (10 Hz), rng = 0x10 (8 Gauss), osr = 0x00 (512 samples)
+    compass.init();
+    Serial.println("Compass initialized.");
     compass.setMode(0x01, 0x04, 0x10, 0x00);
 
     if (!bmp.begin()) {
@@ -66,54 +71,48 @@ void setup() {
         while (1);
     }
 
-    dht.begin();
+    dht1.begin();
+    dht2.begin();
+    dht3.begin();
     LoadCell.begin();
     LoadCell.start(2000); // tare time in ms
 }
 
-
 void loop() {
     if (!mqttClient.connected()) {
-         connectToMQTT();
-     }
+        connectToMQTT();
+    }
     mqttClient.loop();
   
     sensors_event_t event;
     bmp.getEvent(&event);
   
-    float temperature = 0;
+    float tempBMP = 0;
     if (event.pressure) {
-        bmp.getTemperature(&temperature);
-        Serial.print("Temperature: ");
-        Serial.print(temperature);
-        Serial.print(" C\tPressure: ");
-        Serial.print(event.pressure);
-        Serial.println(" hPa");
+        bmp.getTemperature(&tempBMP);
     }
 
     compass.read();
     float x = compass.getX();
     float y = compass.getY();
     float z = compass.getZ();
-    Serial.print("Magnetic X: ");
-    Serial.print(x);
-    Serial.print(" uT, Y: ");
-    Serial.print(y);
-    Serial.print(" uT, Z: ");
-    Serial.print(z);
-    Serial.println(" uT");
-     int a = compass.getAzimuth();
-  
-  Serial.print("A: ");
-  Serial.print(a);
-  Serial.println();
 
-    float humidity = dht.readHumidity();
-    float tempDHT = dht.readTemperature();
-    Serial.print("Humidity: ");
-    Serial.print(humidity);
-    Serial.print(" %\tTemperature: ");
-    Serial.print(tempDHT);
+    float humidity1 = dht1.readHumidity();
+    float tempDHT1 = dht1.readTemperature();
+    float humidity2 = dht2.readHumidity();
+    float tempDHT2 = dht2.readTemperature();
+    float humidity3 = dht3.readHumidity();
+    float tempDHT3 = dht3.readTemperature();
+    
+    // Calculate average temperature of DHT1, DHT2, and BMP
+    float avgInsideTemp = (tempDHT1 + tempDHT2 + tempBMP) / 3.0;
+
+    Serial.print("Inside Average Temperature: ");
+    Serial.print(avgInsideTemp);
+    Serial.println(" *C");
+
+    Serial.print("Outside Temperature: ");
+    Serial.print(tempDHT3);
     Serial.println(" *C");
 
     float weight = 0;
@@ -124,23 +123,24 @@ void loop() {
         Serial.println(" g");
     }
 
-    sendData(temperature, tempDHT, event.pressure, humidity, weight, x, y, z);
+    sendData(avgInsideTemp, tempDHT3, event.pressure, humidity1, humidity2, humidity3, weight, x, y, z);
     delay(2000); // Wait a few seconds between reads
 }
 
-void sendData(float temperature, float tempDHT, float pressure, float humidity, float weight, float x, float y, float z) {
-    StaticJsonDocument<300> jsonDocument;
-    jsonDocument["temperature"] = temperature;
-    jsonDocument["tempDHT"] = tempDHT;
+void sendData(float avgInsideTemp, float tempDHT3, float pressure, float humidity1, float humidity2, float humidity3, float weight, float x, float y, float z) {
+    StaticJsonDocument<500> jsonDocument; // Increase size to accommodate additional data
+    jsonDocument["avgInsideTemp"] = avgInsideTemp;
+    jsonDocument["outsideTemp"] = tempDHT3;
     jsonDocument["pressure"] = pressure;
-    jsonDocument["humidity"] = humidity;
+    jsonDocument["humidity1"] = humidity1;
+    jsonDocument["humidity2"] = humidity2;
+    jsonDocument["humidity3"] = humidity3;
     jsonDocument["weight"] = weight;
     jsonDocument["magnetic_x"] = x;
     jsonDocument["magnetic_y"] = y;
     jsonDocument["magnetic_z"] = z;
     String requestBody;
     serializeJson(jsonDocument, requestBody);
-    //Uncomment and update for MQTT or other uses
      if (mqttClient.publish(mqtt_topic, requestBody.c_str())) {
          Serial.println("Data sent to MQTT");
      } else {
