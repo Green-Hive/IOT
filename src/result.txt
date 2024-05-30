@@ -1,0 +1,177 @@
+Configuring upload protocol...
+AVAILABLE: cmsis-dap, esp-bridge, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
+CURRENT: upload_protocol = esptool
+Looking for upload port...
+Using manually specified: COM6
+Uploading .pio\build\esp32dev\firmware.bin
+esptool.py v4.5.1
+Serial port COM6
+Connecting.........
+Chip is ESP32-D0WD (revision v1.0)
+Features: WiFi, BT, Dual Core, 240MHz, VRef calibration in efuse, Coding Scheme None
+Crystal is 40MHz
+MAC: c4:de:e2:8c:cb:30
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00001000 to 0x00005fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000e000 to 0x0000ffff...
+Flash will be erased from 0x00010000 to 0x000d0fff...
+Compressed 17536 bytes to 12202...
+Writing at 0x00001000... (100 %)
+Wrote 17536 bytes (12202 compressed) at 0x00001000 in 0.4 seconds (effective 326.4 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 146...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.0 seconds (effective 646.9 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 47...
+Writing at 0x0000e000... (100 %)
+Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 1112.4 kbit/s)...
+Hash of data verified.
+Compressed 787936 bytes to 509088...
+Writing at 0x00010000... (3 %)
+Writing at 0x0001c299... (6 %)
+Writing at 0x00026418... (9 %)
+Writing at 0x00033083... (12 %)
+Writing at 0x000384d4... (15 %)
+Writing at 0x0003dd79... (18 %)
+Writing at 0x000430e4... (21 %)
+Writing at 0x000487b6... (25 %)
+Writing at 0x0004d935... (28 %)
+Writing at 0x00052ab5... (31 %)
+Writing at 0x00057e5a... (34 %)
+Writing at 0x0005d048... (37 %)
+Writing at 0x00062270... (40 %)
+Writing at 0x0006772e... (43 %)
+Writing at 0x0006ca0e... (46 %)
+Writing at 0x000726f9... (50 %)
+Writing at 0x00077ec4... (53 %)
+Writing at 0x0007d016... (56 %)
+Writing at 0x0008243c... (59 %)
+Writing at 0x00087936... (62 %)
+Writing at 0x0008ce9b... (65 %)
+Writing at 0x00092731... (68 %)
+Writing at 0x00098348... (71 %)
+Writing at 0x0009dce1... (75 %)
+Writing at 0x000a3738... (78 %)
+Writing at 0x000abd6b... (81 %)
+Writing at 0x000b42bc... (84 %)
+Writing at 0x000b9396... (87 %)
+Writing at 0x000bf641... (90 %)
+Writing at 0x000c4fba... (93 %)
+Writing at 0x000ca2e5... (96 %)
+Writing at 0x000cff24... (100 %)
+Wrote 787936 bytes (509088 compressed) at 0x00010000 in 11.9 seconds (effective 527.7 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+--- Terminal on COM6 | 115200 8-N-1
+--- Available filters and text transformations: colorize, debug, default, direct, esp32_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+0x1 (POWERON_RESET),boot:0x16 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1184
+load:0x40078000,len:13232
+load:0x40080400,len:3028
+entry 0x400805e4
+Connecting to WiFi...
+Connecting to WiFi...
+Connecting to WiFi...
+Connecting to WiFi...
+Connecting to WiFi...
+Connecting to WiFi...
+Connected to WiFi
+Testing network connectivity...
+Broker MQTT reachable at 82.66.182.144
+Connecting to MQTT...
+Connected to MQTT
+Compass initialized.
+BMP180 Temperature: 26.10 C     Pressure: 1005.91 hPa
+Magnetic X: 717.00 uT, Y: -1052.00 uT, Z: 2072.00 uT
+Bottom Left Humidity: 62.40 %   Temperature: 25.00 *C
+Top Right Humidity: 68.40 %     Temperature: 25.00 *C
+Outside Humidity: 61.50 %       Temperature: 25.40 *C
+Weight: 2.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.39999962,"pressure":1005.909973,"humidityBottomLeft":62.40000153,"humidityTopRight":68.40000153,"humidityOutside":61.5,"weight":2,"magnetic_x":717,"magnetic_y":-1052,"magnetic_z":2072,"timestamp":1717070225}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.79 hPa
+Magnetic X: 715.00 uT, Y: -1062.00 uT, Z: 2083.00 uT
+Bottom Left Humidity: 62.40 %   Temperature: 25.00 *C
+Top Right Humidity: 68.40 %     Temperature: 25.00 *C
+Outside Humidity: 61.50 %       Temperature: 25.40 *C
+Weight: 4.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.39999962,"pressure":1005.789978,"humidityBottomLeft":62.40000153,"humidityTopRight":68.40000153,"humidityOutside":61.5,"weight":4,"magnetic_x":715,"magnetic_y":-1062,"magnetic_z":2083,"timestamp":1717070226}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.86 hPa
+Magnetic X: 712.00 uT, Y: -1055.00 uT, Z: 2070.00 uT
+Bottom Left Humidity: 63.20 %   Temperature: 25.00 *C
+Top Right Humidity: 69.00 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 1.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.859985,"humidityBottomLeft":63.20000076,"humidityTopRight":69,"humidityOutside":61.90000153,"weight":1,"magnetic_x":712,"magnetic_y":-1055,"magnetic_z":2070,"timestamp":1717070227}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.83 hPa
+Magnetic X: 710.00 uT, Y: -1065.00 uT, Z: 2067.00 uT
+Bottom Left Humidity: 63.20 %   Temperature: 25.00 *C
+Top Right Humidity: 69.00 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 4.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.830017,"humidityBottomLeft":63.20000076,"humidityTopRight":69,"humidityOutside":61.90000153,"weight":4,"magnetic_x":710,"magnetic_y":-1065,"magnetic_z":2067,"timestamp":1717070228}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.88 hPa
+Magnetic X: 707.00 uT, Y: -1065.00 uT, Z: 2072.00 uT
+Bottom Left Humidity: 63.20 %   Temperature: 25.00 *C
+Top Right Humidity: 69.00 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 8.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.880005,"humidityBottomLeft":63.20000076,"humidityTopRight":69,"humidityOutside":61.90000153,"weight":8,"magnetic_x":707,"magnetic_y":-1065,"magnetic_z":2072,"timestamp":1717070229}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.80 hPa
+Magnetic X: 712.00 uT, Y: -1062.00 uT, Z: 2072.00 uT
+Bottom Left Humidity: 63.20 %   Temperature: 25.00 *C
+Top Right Humidity: 69.00 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 10.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.799988,"humidityBottomLeft":63.20000076,"humidityTopRight":69,"humidityOutside":61.90000153,"weight":10,"magnetic_x":712,"magnetic_y":-1062,"magnetic_z":2072,"timestamp":1717070230}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.91 hPa
+Magnetic X: 670.00 uT, Y: -1047.00 uT, Z: 2058.00 uT
+Bottom Left Humidity: 63.30 %   Temperature: 25.00 *C
+Top Right Humidity: 69.10 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 84.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.909973,"humidityBottomLeft":63.29999924,"humidityTopRight":69.09999847,"humidityOutside":61.90000153,"weight":84,"magnetic_x":670,"magnetic_y":-1047,"magnetic_z":2058,"timestamp":1717070231}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.80 hPa
+Magnetic X: 667.00 uT, Y: -1055.00 uT, Z: 2065.00 uT
+Bottom Left Humidity: 63.30 %   Temperature: 25.00 *C
+Top Right Humidity: 69.10 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 162.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.799988,"humidityBottomLeft":63.29999924,"humidityTopRight":69.09999847,"humidityOutside":61.90000153,"weight":162,"magnetic_x":667,"magnetic_y":-1055,"magnetic_z":2065,"timestamp":1717070232}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.88 hPa
+Magnetic X: 655.00 uT, Y: -1055.00 uT, Z: 2070.00 uT
+Bottom Left Humidity: 63.30 %   Temperature: 25.00 *C
+Top Right Humidity: 69.20 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 246.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.880005,"humidityBottomLeft":63.29999924,"humidityTopRight":69.19999695,"humidityOutside":61.90000153,"weight":246,"magnetic_x":655,"magnetic_y":-1055,"magnetic_z":2070,"timestamp":1717070233}}
+Data sent to MQTT successfully
+BMP180 Temperature: 26.10 C     Pressure: 1005.81 hPa
+Magnetic X: 660.00 uT, Y: -1041.00 uT, Z: 2067.00 uT
+Bottom Left Humidity: 63.30 %   Temperature: 25.00 *C
+Top Right Humidity: 69.20 %     Temperature: 25.00 *C
+Outside Humidity: 61.90 %       Temperature: 25.30 *C
+Weight: 341.00 g
+Sending message to topic test/sensor/data: {"hive_id":"ff34f9a1-3916-4cc4-be69-992cade503c1","user_id":"4ca69f33-04c1-4b00-81cc-706dc490a3cc","data":{"tempBottomLeft":25,"tempTopRight":25,"tempOutside":25.29999924,"pressure":1005.809998,"humidityBottomLeft":63.29999924,"humidityTopRight":69.19999695,"humidityOutside":61.90000153,"weight":341,"magnetic_x":660,"magnetic_y":-1041,"magnetic_z":2067,"timestamp":1717070235}}
+Data sent to MQTT successfully
