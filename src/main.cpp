@@ -10,21 +10,7 @@
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 
-// WiFi credentials (choose the appropriate one and comment out the others)
-// const char *ssid = "GloryHammer";
-// const char *password = "ajfnmqbdbf89jka";
-// const char *ssid = "Freebox-3ED006";
-// const char *password = "putatote7-mulatus?-ammittebat-subarmalis!";
-const char *ssid = "Raspberry";
-const char *password = "ScNmHf!CbmmFTH!";
-
-// MQTT Broker details
-const char *mqtt_server = "82.66.182.144";
-const char *mqtt_topic = "test/sensor/data";
-
-// Hive and user IDs (replace with your own)
-const char *hive_id = "ff34f9a1-3916-4cc4-be69-992cade503c1";
-const char *user_id = "4ca69f33-04c1-4b00-81cc-706dc490a3cc";
+// Missing varibales see readme
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
